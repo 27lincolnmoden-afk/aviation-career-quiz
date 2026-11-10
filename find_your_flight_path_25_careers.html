@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Flight Path | Aviation Career Quiz</title>
+<style>
+:root{--navy:#102b40;--blue:#1d5677;--sky:#eaf3f7;--gold:#f0b84b;--ink:#172b3a;--muted:#5e7180;--line:#d9e3e9;--white:#fff;--green:#28765d}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6f8;color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+button{font:inherit}
+.shell{max-width:920px;margin:0 auto;padding:28px 18px 54px}
+header{background:linear-gradient(130deg,#102b40,#1e5a78);color:#fff;border-radius:22px;padding:34px 30px;margin-bottom:22px;position:relative;overflow:hidden}
+header:after{content:"✈";position:absolute;right:25px;top:15px;font-size:100px;opacity:.12;transform:rotate(-12deg)}
+.kicker{text-transform:uppercase;letter-spacing:2px;font-size:.75rem;font-weight:700;color:#f6cf79}
+h1{font-size:clamp(2rem,5vw,3rem);line-height:1.08;margin:8px 0 12px}
+header p{max-width:600px;margin:0;color:#e3edf2}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 8px 26px rgba(16,43,64,.06)}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:.9rem;font-weight:700}
+.progress{height:9px;background:#e8eef2;border-radius:99px;overflow:hidden;margin:12px 0 24px}
+.progress span{display:block;height:100%;width:0;background:var(--gold);border-radius:99px;transition:width .2s}
+h2{font-size:1.45rem;line-height:1.25;margin:0 0 8px}
+.hint{color:var(--muted);margin:0 0 20px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer{border:1.5px solid var(--line);border-radius:13px;padding:15px 16px;text-align:left;background:#fff;color:var(--ink);cursor:pointer;min-height:76px;transition:.15s}
+.answer:hover{border-color:var(--blue);background:#f5fafc}
+.answer:focus-visible,.primary:focus-visible,.secondary:focus-visible{outline:3px solid #f0b84b;outline-offset:3px}
+.answer.selected{border-color:var(--blue);background:var(--sky);box-shadow:inset 0 0 0 1px var(--blue)}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+.primary,.secondary{border:0;border-radius:999px;padding:12px 21px;font-weight:700;cursor:pointer}
+.primary{background:var(--navy);color:#fff}
+.primary:disabled{opacity:.35;cursor:not-allowed}
+.secondary{background:#edf2f5;color:var(--navy)}
+.note{font-size:.84rem;color:var(--muted);margin-top:16px}
+.hidden{display:none!important}
+.results-intro{margin-bottom:22px}
+.result-card{border:1px solid var(--line);border-radius:15px;padding:18px;margin:13px 0;background:#fff}
+.rank{display:inline-block;background:#eaf3f7;color:#174b68;font-size:.76rem;font-weight:800;padding:4px 9px;border-radius:99px;margin-bottom:8px}
+.result-card h3{margin:0 0 6px;font-size:1.2rem}
+.result-card p{margin:7px 0;color:#405462}
+.meta{font-size:.9rem;color:var(--muted)}
+.matchbar{height:7px;background:#edf1f3;border-radius:99px;overflow:hidden;margin:10px 0 4px}
+.matchbar span{display:block;height:100%;background:var(--green);border-radius:99px}
+.disclaimer{background:#fff8e8;border:1px solid #f2dfb4;padding:14px 16px;border-radius:12px;font-size:.88rem;margin:20px 0;color:#5c4a26}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
+@media(max-width:620px){.answers{grid-template-columns:1fr}header{padding:28px 22px}.panel{padding:20px}.answer{min-height:unset}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="kicker">Aviation career discovery</div>
+  <h1>Find Your Flight Path</h1>
+  <p>Answer a few questions about what you enjoy. We'll suggest aviation careers that may fit your interests — including careers you might not have heard of yet.</p>
+</header>
+
+<main>
+<section id="quiz" class="panel" aria-live="polite">
+  <div class="topline"><span id="step">Question 1 of 12</span><span id="percent">8% complete</span></div>
+  <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="12" aria-valuenow="1"><span id="bar"></span></div>
+  <h2 id="question"></h2>
+  <p class="hint" id="hint"></p>
+  <div class="answers" id="answers"></div>
+  <div class="actions">
+    <button class="secondary" id="back" type="button">Back</button>
+    <button class="primary" id="next" type="button" disabled>Next</button>
+  </div>
+  <p class="note">There are no right or wrong answers. Choose what sounds most interesting to you.</p>
+</section>
+
+<section id="results" class="panel hidden" aria-live="polite">
+  <div class="kicker" style="color:#28765d">Your results</div>
+  <h2>Your aviation career matches</h2>
+  <p class="hint results-intro">These suggestions are based on the interests you selected. Explore all of them — your results are a starting point, not a limit.</p>
+  <div id="matches"></div>
+  <div class="disclaimer"><strong>Remember:</strong> This is an interest quiz, not a professional career assessment or a guarantee that a job will be a perfect fit. Training, licensing, and education requirements vary by career and employer.</div>
+  <button class="primary" id="restart" type="button">Take the quiz again</button>
+</section>
+</main>
+<footer>Find Your Flight Path · Explore aviation beyond the cockpit</footer>
+</div>
+<script>
+const careers = {
+  mechanic:{name:"Aircraft Maintenance Technician",desc:"Inspect, maintain, troubleshoot, and repair aircraft so they can operate safely.",work:"Hangars, repair stations, and airport maintenance facilities.",skills:"Hands-on problem solving, attention to detail, mechanical skills.",path:"Often involves an FAA-approved aviation maintenance program and meeting FAA mechanic certification requirements in the United States.",tag:"Mechanical"},
+  avionics:{name:"Avionics Technician",desc:"Install, inspect, test, and repair aircraft electronics such as radios, navigation equipment, and flight instruments.",work:"Aircraft hangars, repair stations, and manufacturing facilities.",skills:"Electronics, troubleshooting, careful testing, and technology.",path:"Training often includes electronics and aviation systems; certification requirements depend on the work performed.",tag:"Technology"},
+  engineer:{name:"Aerospace Engineer",desc:"Help design, develop, test, and improve aircraft, spacecraft, and related systems.",work:"Engineering offices, laboratories, test facilities, and manufacturing sites.",skills:"Math, science, design, research, and creative problem solving.",path:"A bachelor's degree in aerospace engineering or a related engineering field is commonly expected.",tag:"Engineering"},
+  controller:{name:"Air Traffic Controller",desc:"Help organize aircraft movement and keep aircraft safely separated in the air and at airports.",work:"Airport control towers and air traffic control centers.",skills:"Clear communication, focus, quick decisions, and teamwork.",path:"In the United States, FAA hiring and training pathways have specific eligibility and qualification requirements.",tag:"Air Traffic"},
+  airport:{name:"Airport Operations Specialist",desc:"Coordinate airport activities such as inspections, safety procedures, facilities, and daily operations.",work:"Airport terminals, airfields, and operations offices.",skills:"Organization, communication, practical problem solving, and teamwork.",path:"Requirements vary by airport; employers may value aviation, business, safety, or operations education and experience.",tag:"Operations"},
+  dispatcher:{name:"Aircraft Dispatcher",desc:"Help plan airline flights by considering weather, routes, fuel, aircraft performance, and operating conditions.",work:"Airline operations control centers and dispatch offices.",skills:"Planning, weather awareness, communication, and decision making.",path:"Airline dispatchers in the United States need an FAA aircraft dispatcher certificate.",tag:"Planning"},
+  drone:{name:"UAS / Drone Operations Specialist",desc:"Plan and conduct work using uncrewed aircraft for tasks such as mapping, inspections, surveying, and imaging.",work:"Offices, outdoor sites, industrial locations, and field operations.",skills:"Technology, planning, spatial thinking, and safe operating habits.",path:"Commercial small-drone work in the United States commonly requires an FAA Remote Pilot Certificate under Part 107, when applicable.",tag:"Technology"},
+  manufacturing:{name:"Aircraft Manufacturing Technician",desc:"Build, assemble, inspect, or test aircraft parts and systems during aircraft production.",work:"Aircraft factories, production lines, and quality-control areas.",skills:"Working with tools, precision, teamwork, and following technical instructions.",path:"Training may include manufacturing, machining, composites, electrical systems, or quality assurance.",tag:"Building"},
+  safety:{name:"Aviation Safety Specialist",desc:"Help identify risks, review procedures, analyze safety information, and improve aviation safety programs.",work:"Airlines, airports, aviation companies, government agencies, and consulting teams.",skills:"Research, communication, careful analysis, and attention to detail.",path:"Education and experience vary; backgrounds may include aviation, engineering, safety, or data analysis.",tag:"Safety"},
+  meteorologist:{name:"Aviation Meteorologist",desc:"Analyze and explain weather that can affect aircraft and airport operations.",work:"Weather offices, forecasting centers, and aviation operations teams.",skills:"Weather science, data analysis, pattern recognition, and communication.",path:"Meteorology roles commonly require college-level study in meteorology or atmospheric science.",tag:"Weather"},
+  instructor:{name:"Aviation Instructor",desc:"Teach aviation knowledge or practical skills, such as aircraft maintenance, ground-school subjects, or flight-related topics.",work:"Training schools, colleges, maintenance programs, and aviation organizations.",skills:"Explaining ideas, patience, subject knowledge, and mentoring.",path:"Qualifications depend on what is taught; some instruction roles require specific FAA certificates or professional credentials.",tag:"Teaching"},
+  customer:{name:"Airline / Airport Customer Service Specialist",desc:"Help passengers with check-in, boarding, travel questions, and solving travel-related problems.",work:"Airport terminals, airline service desks, and gate areas.",skills:"Communication, customer service, organization, and staying calm under pressure.",path:"Employers usually provide role-specific training; requirements vary by airline and position.",tag:"People"},
+  structures:{name:'Aircraft Structures Technician',desc:'Inspect, repair, and build aircraft structures such as sheet-metal sections, frames, and composite parts.',work:'Aircraft repair stations, hangars, and manufacturing facilities.',skills:'Precision, measuring, practical problem solving, and working with materials.',path:'Training may include aviation maintenance, sheet metal, welding, or composite-materials programs.',tag:"Additional career"},
+  engine:{name:'Aircraft Engine Technician',desc:'Inspect, maintain, repair, and test aircraft engines and related components.',work:'Engine repair shops, airline maintenance facilities, and manufacturing sites.',skills:'Mechanical ability, careful inspection, and troubleshooting.',path:'Training may come through an aviation maintenance program or specialized engine-maintenance training.',tag:"Additional career"},
+  software:{name:'Aerospace Software Engineer',desc:'Develop and test software used in aircraft systems, flight simulations, navigation, and aerospace technology.',work:'Aerospace companies, engineering offices, laboratories, and technology teams.',skills:'Programming, math, logical thinking, and testing.',path:'A degree in computer science, software engineering, or a related field is commonly useful.',tag:"Additional career"},
+  flighttest:{name:'Flight Test Engineer',desc:'Plan and analyze tests that evaluate how aircraft and aerospace systems perform.',work:'Flight-test facilities, engineering offices, laboratories, and test ranges.',skills:'Engineering, data analysis, technical writing, and teamwork.',path:'Typically requires an engineering degree and experience with aircraft systems or testing.',tag:"Additional career"},
+  firefighter:{name:'Airport Firefighter',desc:'Respond to airport emergencies and help protect people, aircraft, and airport facilities.',work:'Airport fire stations and emergency-response areas.',skills:'Teamwork, calm decision making, and emergency-response skills.',path:'Requirements vary and may include firefighter training and specialized airport-rescue training.',tag:"Additional career"},
+  investigator:{name:'Aviation Accident Investigator',desc:'Examine aviation incidents and accidents to understand what happened and identify ways to improve safety.',work:'Government agencies, safety organizations, and investigation teams.',skills:'Research, documentation, analysis, and attention to detail.',path:'Relevant backgrounds may include aviation, engineering, maintenance, operations, or safety.',tag:"Additional career"},
+  attendant:{name:'Flight Attendant',desc:'Help passengers, explain safety procedures, and support a safe and orderly cabin environment.',work:'Airline aircraft, airports, and training facilities.',skills:'Communication, teamwork, customer service, and staying calm under pressure.',path:'Airlines provide required training; hiring and qualification requirements vary by carrier.',tag:"Additional career"},
+  attorney:{name:'Aviation Attorney',desc:'Work on legal matters involving aircraft, airlines, airports, aviation businesses, regulations, or accidents.',work:'Law firms, companies, government agencies, and legal offices.',skills:'Reading, writing, research, reasoning, and communication.',path:'In the United States, attorneys generally need a law degree and state licensing.',tag:"Additional career"},
+  interior:{name:'Aircraft Interior Designer',desc:'Help design aircraft cabin spaces, seating layouts, materials, lighting, and passenger features.',work:'Aerospace design teams, aircraft manufacturers, and cabin-interior suppliers.',skills:'Creativity, design software, spatial thinking, and attention to detail.',path:'Education may include industrial design, interior design, engineering, or a related field.',tag:"Additional career"},
+  cargo:{name:'Air Cargo Operations Specialist',desc:'Coordinate the handling, loading, tracking, and movement of freight transported by air.',work:'Air cargo terminals, airline cargo offices, warehouses, and airport ramps.',skills:'Organization, logistics, communication, and problem solving.',path:'Employers may provide training; logistics, supply-chain, or aviation coursework can be helpful.',tag:"Additional career"},
+  electrician:{name:'Aviation Electrician',desc:'Install, inspect, maintain, and troubleshoot electrical wiring and power systems in aircraft.',work:'Aircraft hangars, maintenance facilities, and manufacturing plants.',skills:'Electrical knowledge, careful work, and reading technical diagrams.',path:'Training may include aviation maintenance, electrical systems, or an apprenticeship.',tag:"Additional career"},
+  inspector:{name:'Aircraft Inspector',desc:'Examine aircraft, parts, and maintenance work to check that they meet required standards and documentation.',work:'Repair stations, airlines, manufacturing facilities, and aviation oversight organizations.',skills:'Attention to detail, technical knowledge, documentation, and sound judgment.',path:'Many positions expect aircraft maintenance or manufacturing experience; some require specific credentials.',tag:"Additional career"},
+  satellite:{name:'Satellite Systems Engineer',desc:'Help design, test, and maintain satellites and systems for space-based communication, navigation, and observation.',work:'Aerospace companies, space agencies, laboratories, and engineering offices.',skills:'Math, physics, electronics, software, and systems thinking.',path:'A degree in aerospace, electrical, mechanical, or a related engineering field is commonly expected.',tag:"Additional career"}
+
+};
+
+const questions = [
+ {q:"Which kind of activity sounds most interesting?",h:"Choose the activity you'd be happiest doing.",a:[
+  ["Fixing or figuring out how machines work",{mechanic:2,avionics:1,manufacturing:1}],
+  ["Designing or inventing something new",{engineer:2,manufacturing:1}],
+  ["Using computers, electronics, or technology",{avionics:2,drone:2,engineer:1}],
+  ["Helping people and keeping things organized",{airport:1,controller:1,customer:2,instructor:1}]
+ ]},
+ {q:"Where would you most like to spend your workday?",h:"Think about the environment, not a specific job.",a:[
+  ["In a hangar or workshop",{mechanic:2,avionics:1,manufacturing:2}],
+  ["In an office or operations center",{dispatcher:2,airport:1,safety:1,meteorologist:1}],
+  ["At an airport, working around aircraft and people",{airport:2,customer:2,controller:1}],
+  ["A mix of outdoor locations and technology work",{drone:2,airport:1,safety:1}]
+ ]},
+ {q:"Which school subject do you enjoy most?",h:"Pick the closest match.",a:[
+  ["Math and physics",{engineer:2,dispatcher:1,meteorologist:1}],
+  ["Science and weather",{meteorologist:2,engineer:1,safety:1}],
+  ["Technology, computers, or electronics",{avionics:2,drone:2,engineer:1}],
+  ["Writing, communication, or working with people",{instructor:2,customer:2,controller:1}]
+ ]},
+ {q:"How do you feel about working with your hands?",h:"",a:[
+  ["I really enjoy building and repairing things",{mechanic:2,manufacturing:2,avionics:1}],
+  ["Sometimes, especially with tools or technology",{avionics:2,drone:1,engineer:1}],
+  ["I'd rather plan, analyze, or organize",{dispatcher:2,safety:2,airport:1,meteorologist:1}],
+  ["I'd rather teach, communicate, or help people",{instructor:2,customer:2,airport:1}]
+ ]},
+ {q:"What kind of problem would you most like to solve?",h:"",a:[
+  ["Find out why a machine or system isn't working",{mechanic:2,avionics:2}],
+  ["Figure out how to make a design work better",{engineer:2,manufacturing:1}],
+  ["Make a safe plan when conditions keep changing",{dispatcher:2,controller:2,airport:1}],
+  ["Help someone understand something or solve a concern",{instructor:2,customer:2,safety:1}]
+ ]},
+ {q:"Which responsibility sounds most appealing?",h:"",a:[
+  ["Making sure aircraft equipment works correctly",{mechanic:2,avionics:2}],
+  ["Helping aircraft move safely through busy airspace",{controller:3}],
+  ["Planning flights around weather and operating conditions",{dispatcher:2,meteorologist:1}],
+  ["Making sure an airport or aviation team runs smoothly",{airport:2,safety:1}]
+ ]},
+ {q:"How do you feel about details and checklists?",h:"",a:[
+  ["I like checking details carefully",{mechanic:1,avionics:1,safety:2,manufacturing:1}],
+  ["I like tracking information and spotting patterns",{meteorologist:2,dispatcher:1,safety:2}],
+  ["I prefer big-picture planning and coordinating",{airport:2,dispatcher:1,controller:1}],
+  ["I like explaining steps and helping others learn",{instructor:2,customer:1}]
+ ]},
+ {q:"Which technology would you most like to use?",h:"",a:[
+  ["Aircraft engines, tools, and mechanical systems",{mechanic:2,manufacturing:1}],
+  ["Radios, sensors, and cockpit electronics",{avionics:3}],
+  ["Drones, cameras, mapping, and software",{drone:3}],
+  ["Radar, weather data, or flight-planning systems",{controller:1,meteorologist:2,dispatcher:2}]
+ ]},
+ {q:"What pace of work sounds best?",h:"Every aviation job has busy moments, but the overall style can differ.",a:[
+  ["Hands-on tasks with a clear process",{mechanic:2,manufacturing:2,avionics:1}],
+  ["A fast-paced role where I make timely decisions",{controller:2,dispatcher:2}],
+  ["Researching information and solving problems carefully",{engineer:2,meteorologist:1,safety:2}],
+  ["A people-focused role with lots of communication",{customer:2,instructor:2,airport:1}]
+ ]},
+ {q:"Which project would you choose?",h:"",a:[
+  ["Build or repair a model aircraft",{mechanic:1,manufacturing:2,engineer:1}],
+  ["Create a drone map of an area",{drone:3}],
+  ["Study a weather forecast and plan a flight",{meteorologist:2,dispatcher:2}],
+  ["Create a safety plan or teach a lesson",{safety:2,instructor:2,airport:1}]
+ ]},
+ {q:"Who would you most enjoy working with?",h:"",a:[
+  ["A small technical team working on aircraft",{mechanic:2,avionics:1,manufacturing:2}],
+  ["A team coordinating aircraft and airport activity",{controller:2,airport:2,dispatcher:1}],
+  ["Engineers, scientists, or data specialists",{engineer:2,meteorologist:1,safety:1}],
+  ["Students, travelers, or members of the public",{instructor:2,customer:2}]
+ ]},
+ {q:"What would make a job feel rewarding to you?",h:"Choose the result that matters most to you.",a:[
+  ["Knowing I helped keep an aircraft working safely",{mechanic:2,avionics:2,safety:1}],
+  ["Seeing something I helped design or build come to life",{engineer:2,manufacturing:2}],
+  ["Helping flights and airports operate safely and smoothly",{controller:1,dispatcher:2,airport:2}],
+  ["Using new technology or helping someone succeed",{drone:2,instructor:2,customer:1}]
+ ]}
+];
+
+
+// Extra scoring makes every added career eligible to appear in the results.
+const extraCareerScoring = {"structures": [[0, 0, 3], [1, 0, 3], [3, 0, 3], [4, 0, 2], [7, 0, 2], [9, 0, 2], [11, 0, 1]], "engine": [[0, 0, 2], [1, 0, 2], [3, 0, 3], [4, 0, 3], [5, 0, 2], [7, 0, 3], [11, 0, 2]], "software": [[0, 1, 2], [0, 2, 2], [2, 2, 3], [3, 2, 1], [4, 1, 3], [6, 1, 1], [7, 2, 2], [8, 2, 2], [9, 1, 3], [10, 2, 2], [11, 1, 2]], "flighttest": [[0, 1, 2], [1, 1, 1], [2, 0, 2], [4, 1, 2], [6, 1, 1], [8, 2, 2], [9, 0, 1], [10, 2, 2], [11, 1, 3]], "firefighter": [[0, 3, 2], [1, 2, 1], [3, 3, 1], [4, 2, 1], [5, 3, 3], [8, 1, 2], [9, 3, 1], [10, 1, 2], [11, 2, 2]], "investigator": [[1, 1, 1], [2, 1, 1], [3, 2, 2], [4, 3, 2], [6, 1, 3], [8, 2, 2], [9, 3, 2], [10, 2, 2], [11, 3, 3]], "attendant": [[0, 3, 2], [1, 2, 2], [2, 3, 2], [3, 3, 2], [4, 3, 1], [6, 3, 2], [8, 3, 2], [10, 3, 2], [11, 3, 3]], "attorney": [[1, 1, 1], [2, 3, 2], [3, 2, 2], [4, 3, 3], [6, 2, 1], [8, 2, 1], [10, 3, 2], [11, 3, 3]], "interior": [[0, 1, 2], [1, 0, 1], [2, 3, 3], [3, 3, 2], [4, 1, 2], [6, 3, 2], [8, 2, 1], [9, 3, 3], [10, 2, 1], [11, 1, 3]], "cargo": [[0, 3, 1], [1, 2, 3], [3, 2, 1], [4, 2, 2], [5, 2, 3], [6, 2, 2], [8, 1, 1], [9, 2, 3], [10, 1, 2], [11, 2, 3]], "electrician": [[0, 0, 1], [0, 2, 1], [1, 0, 1], [2, 2, 1], [3, 0, 2], [4, 0, 2], [5, 0, 1], [7, 1, 3], [11, 0, 2]], "inspector": [[0, 0, 1], [1, 0, 1], [3, 0, 1], [4, 0, 1], [5, 0, 2], [6, 0, 3], [7, 1, 1], [9, 0, 1], [10, 0, 1], [11, 0, 3]], "satellite": [[0, 1, 2], [0, 2, 1], [1, 1, 1], [2, 0, 2], [2, 2, 1], [4, 1, 2], [7, 3, 3], [8, 2, 2], [9, 1, 1], [10, 2, 2], [11, 1, 3]]};
+Object.entries(extraCareerScoring).forEach(([career, entries]) => entries.forEach(([qi, ai, points]) => { questions[qi].a[ai][1][career] = points; }));
+
+let current=0;
+let selected=Array(questions.length).fill(null);
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[current];
+ $("step").textContent=`Question ${current+1} of ${questions.length}`;
+ $("percent").textContent=`${Math.round((current+1)/questions.length*100)}% complete`;
+ $("bar").style.width=`${(current+1)/questions.length*100}%`;
+ document.querySelector('[role="progressbar"]').setAttribute("aria-valuenow",current+1);
+ $("question").textContent=q.q;
+ $("hint").textContent=q.h;
+ $("answers").innerHTML="";
+ q.a.forEach((a,i)=>{
+  const b=document.createElement("button");
+  b.type="button";b.className="answer"+(selected[current]===i?" selected":"");
+  b.textContent=a[0];b.setAttribute("aria-pressed",selected[current]===i?"true":"false");
+  b.addEventListener("click",()=>{selected[current]=i;render();});
+  $("answers").appendChild(b);
+ });
+ $("back").disabled=current===0;
+ $("back").style.opacity=current===0?".35":"1";
+ $("next").disabled=selected[current]===null;
+ $("next").textContent=current===questions.length-1?"See my results":"Next";
+}
+function showResults(){
+ const scores={};Object.keys(careers).forEach(k=>scores[k]=0);
+ selected.forEach((choice,qi)=>{
+  const weights=questions[qi].a[choice][1];
+  Object.entries(weights).forEach(([career,points])=>scores[career]+=points);
+ });
+ const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+ const top=ranked.slice(0,3);
+ const max=Math.max(...ranked.map(x=>x[1]),1);
+ $("matches").innerHTML="";
+ top.forEach(([key,score],i)=>{
+  const c=careers[key], card=document.createElement("article");
+  card.className="result-card";
+  const rank=document.createElement("div");rank.className="rank";rank.textContent=["TOP MATCH","2ND MATCH","3RD MATCH"][i];
+  const h=document.createElement("h3");h.textContent=c.name;
+  const desc=document.createElement("p");desc.textContent=c.desc;
+  const work=document.createElement("p");work.innerHTML="<strong>Where you might work:</strong> ";work.append(document.createTextNode(c.work));
+  const skills=document.createElement("p");skills.innerHTML="<strong>Useful interests and skills:</strong> ";skills.append(document.createTextNode(c.skills));
+  const path=document.createElement("p");path.innerHTML="<strong>Possible pathway:</strong> ";path.append(document.createTextNode(c.path));
+  const meta=document.createElement("div");meta.className="meta";meta.textContent=`Interest score: ${score} points`;
+  const bar=document.createElement("div");bar.className="matchbar";
+  const fill=document.createElement("span");fill.style.width=`${Math.max(8,score/max*100)}%`;bar.append(fill);
+  card.append(rank,h,desc,work,skills,path,meta,bar);
+  $("matches").append(card);
+ });
+ $("quiz").classList.add("hidden");$("results").classList.remove("hidden");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("back").addEventListener("click",()=>{if(current>0){current--;render();}});
+$("next").addEventListener("click",()=>{if(selected[current]===null)return;if(current<questions.length-1){current++;render();}else showResults();});
+$("restart").addEventListener("click",()=>{current=0;selected=Array(questions.length).fill(null);$("results").classList.add("hidden");$("quiz").classList.remove("hidden");render();window.scrollTo({top:0,behavior:"smooth"});});
+render();
+</script>
+</body>
+</html>
