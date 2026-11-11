@@ -81,32 +81,55 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px}
 </div>
 <script>
 const careers = {
-  mechanic:{name:"Aircraft Maintenance Technician",desc:"Inspect, maintain, troubleshoot, and repair aircraft so they can operate safely.",work:"Hangars, repair stations, and airport maintenance facilities.",skills:"Hands-on problem solving, attention to detail, mechanical skills.",path:"Often involves an FAA-approved aviation maintenance program and meeting FAA mechanic certification requirements in the United States.",tag:"Mechanical"},
-  avionics:{name:"Avionics Technician",desc:"Install, inspect, test, and repair aircraft electronics such as radios, navigation equipment, and flight instruments.",work:"Aircraft hangars, repair stations, and manufacturing facilities.",skills:"Electronics, troubleshooting, careful testing, and technology.",path:"Training often includes electronics and aviation systems; certification requirements depend on the work performed.",tag:"Technology"},
-  engineer:{name:"Aerospace Engineer",desc:"Help design, develop, test, and improve aircraft, spacecraft, and related systems.",work:"Engineering offices, laboratories, test facilities, and manufacturing sites.",skills:"Math, science, design, research, and creative problem solving.",path:"A bachelor's degree in aerospace engineering or a related engineering field is commonly expected.",tag:"Engineering"},
-  controller:{name:"Air Traffic Controller",desc:"Help organize aircraft movement and keep aircraft safely separated in the air and at airports.",work:"Airport control towers and air traffic control centers.",skills:"Clear communication, focus, quick decisions, and teamwork.",path:"In the United States, FAA hiring and training pathways have specific eligibility and qualification requirements.",tag:"Air Traffic"},
-  airport:{name:"Airport Operations Specialist",desc:"Coordinate airport activities such as inspections, safety procedures, facilities, and daily operations.",work:"Airport terminals, airfields, and operations offices.",skills:"Organization, communication, practical problem solving, and teamwork.",path:"Requirements vary by airport; employers may value aviation, business, safety, or operations education and experience.",tag:"Operations"},
-  dispatcher:{name:"Aircraft Dispatcher",desc:"Help plan airline flights by considering weather, routes, fuel, aircraft performance, and operating conditions.",work:"Airline operations control centers and dispatch offices.",skills:"Planning, weather awareness, communication, and decision making.",path:"Airline dispatchers in the United States need an FAA aircraft dispatcher certificate.",tag:"Planning"},
-  drone:{name:"UAS / Drone Operations Specialist",desc:"Plan and conduct work using uncrewed aircraft for tasks such as mapping, inspections, surveying, and imaging.",work:"Offices, outdoor sites, industrial locations, and field operations.",skills:"Technology, planning, spatial thinking, and safe operating habits.",path:"Commercial small-drone work in the United States commonly requires an FAA Remote Pilot Certificate under Part 107, when applicable.",tag:"Technology"},
-  manufacturing:{name:"Aircraft Manufacturing Technician",desc:"Build, assemble, inspect, or test aircraft parts and systems during aircraft production.",work:"Aircraft factories, production lines, and quality-control areas.",skills:"Working with tools, precision, teamwork, and following technical instructions.",path:"Training may include manufacturing, machining, composites, electrical systems, or quality assurance.",tag:"Building"},
-  safety:{name:"Aviation Safety Specialist",desc:"Help identify risks, review procedures, analyze safety information, and improve aviation safety programs.",work:"Airlines, airports, aviation companies, government agencies, and consulting teams.",skills:"Research, communication, careful analysis, and attention to detail.",path:"Education and experience vary; backgrounds may include aviation, engineering, safety, or data analysis.",tag:"Safety"},
-  meteorologist:{name:"Aviation Meteorologist",desc:"Analyze and explain weather that can affect aircraft and airport operations.",work:"Weather offices, forecasting centers, and aviation operations teams.",skills:"Weather science, data analysis, pattern recognition, and communication.",path:"Meteorology roles commonly require college-level study in meteorology or atmospheric science.",tag:"Weather"},
-  instructor:{name:"Aviation Instructor",desc:"Teach aviation knowledge or practical skills, such as aircraft maintenance, ground-school subjects, or flight-related topics.",work:"Training schools, colleges, maintenance programs, and aviation organizations.",skills:"Explaining ideas, patience, subject knowledge, and mentoring.",path:"Qualifications depend on what is taught; some instruction roles require specific FAA certificates or professional credentials.",tag:"Teaching"},
-  customer:{name:"Airline / Airport Customer Service Specialist",desc:"Help passengers with check-in, boarding, travel questions, and solving travel-related problems.",work:"Airport terminals, airline service desks, and gate areas.",skills:"Communication, customer service, organization, and staying calm under pressure.",path:"Employers usually provide role-specific training; requirements vary by airline and position.",tag:"People"},
-  structures:{name:'Aircraft Structures Technician',desc:'Inspect, repair, and build aircraft structures such as sheet-metal sections, frames, and composite parts.',work:'Aircraft repair stations, hangars, and manufacturing facilities.',skills:'Precision, measuring, practical problem solving, and working with materials.',path:'Training may include aviation maintenance, sheet metal, welding, or composite-materials programs.',tag:"Additional career"},
-  engine:{name:'Aircraft Engine Technician',desc:'Inspect, maintain, repair, and test aircraft engines and related components.',work:'Engine repair shops, airline maintenance facilities, and manufacturing sites.',skills:'Mechanical ability, careful inspection, and troubleshooting.',path:'Training may come through an aviation maintenance program or specialized engine-maintenance training.',tag:"Additional career"},
-  software:{name:'Aerospace Software Engineer',desc:'Develop and test software used in aircraft systems, flight simulations, navigation, and aerospace technology.',work:'Aerospace companies, engineering offices, laboratories, and technology teams.',skills:'Programming, math, logical thinking, and testing.',path:'A degree in computer science, software engineering, or a related field is commonly useful.',tag:"Additional career"},
-  flighttest:{name:'Flight Test Engineer',desc:'Plan and analyze tests that evaluate how aircraft and aerospace systems perform.',work:'Flight-test facilities, engineering offices, laboratories, and test ranges.',skills:'Engineering, data analysis, technical writing, and teamwork.',path:'Typically requires an engineering degree and experience with aircraft systems or testing.',tag:"Additional career"},
-  firefighter:{name:'Airport Firefighter',desc:'Respond to airport emergencies and help protect people, aircraft, and airport facilities.',work:'Airport fire stations and emergency-response areas.',skills:'Teamwork, calm decision making, and emergency-response skills.',path:'Requirements vary and may include firefighter training and specialized airport-rescue training.',tag:"Additional career"},
-  investigator:{name:'Aviation Accident Investigator',desc:'Examine aviation incidents and accidents to understand what happened and identify ways to improve safety.',work:'Government agencies, safety organizations, and investigation teams.',skills:'Research, documentation, analysis, and attention to detail.',path:'Relevant backgrounds may include aviation, engineering, maintenance, operations, or safety.',tag:"Additional career"},
-  attendant:{name:'Flight Attendant',desc:'Help passengers, explain safety procedures, and support a safe and orderly cabin environment.',work:'Airline aircraft, airports, and training facilities.',skills:'Communication, teamwork, customer service, and staying calm under pressure.',path:'Airlines provide required training; hiring and qualification requirements vary by carrier.',tag:"Additional career"},
-  attorney:{name:'Aviation Attorney',desc:'Work on legal matters involving aircraft, airlines, airports, aviation businesses, regulations, or accidents.',work:'Law firms, companies, government agencies, and legal offices.',skills:'Reading, writing, research, reasoning, and communication.',path:'In the United States, attorneys generally need a law degree and state licensing.',tag:"Additional career"},
-  interior:{name:'Aircraft Interior Designer',desc:'Help design aircraft cabin spaces, seating layouts, materials, lighting, and passenger features.',work:'Aerospace design teams, aircraft manufacturers, and cabin-interior suppliers.',skills:'Creativity, design software, spatial thinking, and attention to detail.',path:'Education may include industrial design, interior design, engineering, or a related field.',tag:"Additional career"},
-  cargo:{name:'Air Cargo Operations Specialist',desc:'Coordinate the handling, loading, tracking, and movement of freight transported by air.',work:'Air cargo terminals, airline cargo offices, warehouses, and airport ramps.',skills:'Organization, logistics, communication, and problem solving.',path:'Employers may provide training; logistics, supply-chain, or aviation coursework can be helpful.',tag:"Additional career"},
-  electrician:{name:'Aviation Electrician',desc:'Install, inspect, maintain, and troubleshoot electrical wiring and power systems in aircraft.',work:'Aircraft hangars, maintenance facilities, and manufacturing plants.',skills:'Electrical knowledge, careful work, and reading technical diagrams.',path:'Training may include aviation maintenance, electrical systems, or an apprenticeship.',tag:"Additional career"},
-  inspector:{name:'Aircraft Inspector',desc:'Examine aircraft, parts, and maintenance work to check that they meet required standards and documentation.',work:'Repair stations, airlines, manufacturing facilities, and aviation oversight organizations.',skills:'Attention to detail, technical knowledge, documentation, and sound judgment.',path:'Many positions expect aircraft maintenance or manufacturing experience; some require specific credentials.',tag:"Additional career"},
-  satellite:{name:'Satellite Systems Engineer',desc:'Help design, test, and maintain satellites and systems for space-based communication, navigation, and observation.',work:'Aerospace companies, space agencies, laboratories, and engineering offices.',skills:'Math, physics, electronics, software, and systems thinking.',path:'A degree in aerospace, electrical, mechanical, or a related engineering field is commonly expected.',tag:"Additional career"}
-
+  mechanic: {
+    title: "Aircraft Maintenance Technician",
+    description: "Inspects, maintains, and repairs aircraft."
+  },
+  avionics: {
+    title: "Avionics Technician / Avionics Repair Technician",
+    description: "Installs, tests, and repairs aircraft electronics and navigation systems."
+  },
+  component: {
+    title: "Aircraft Component Repair Technician",
+    description: "Repairs and tests individual aircraft parts and components."
+  },
+  manufacturing: {
+    title: "Aerospace Manufacturing Technician / Assembler",
+    description: "Builds and assembles aircraft parts and systems."
+  },
+  quality: {
+    title: "Quality Inspector / CMM Operator",
+    description: "Inspects manufactured parts and checks that they meet quality standards."
+  },
+  lineService: {
+    title: "Aircraft Line Service Technician",
+    description: "Provides ground services such as aircraft parking, fueling, and ramp support."
+  },
+  technicalOps: {
+    title: "Aircraft Maintenance / Airline Technical Operations",
+    description: "Coordinates aircraft maintenance, inspections, repairs, and technical records."
+  },
+  maintenanceSupport: {
+    title: "Aircraft Mechanic / Maintenance Support",
+    description: "Assists with aircraft inspections, maintenance, troubleshooting, and repairs."
+  },
+  engine: {
+    title: "Aircraft Engine / Component Maintenance Technician",
+    description: "Maintains, inspects, and repairs aircraft engines and engine components."
+  },
+  systems: {
+    title: "Aircraft Systems / Maintenance Technician",
+    description: "Maintains aircraft systems such as hydraulics, fuel systems, and landing gear."
+  },
+  engineer: {
+    title: "Aerospace Engineer / Manufacturing Engineer",
+    description: "Designs aircraft products and improves manufacturing processes."
+  },
+  simulator: {
+    title: "Flight Simulator Technician / Simulation Support",
+    description: "Maintains and repairs flight simulators and pilot training equipment."
+  }
+};
 };
 
 const questions = [
